@@ -10,8 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/equipe')]
+#[IsGranted('ROLE_ADMIN')]
 class EmployeController extends AbstractController
 {
     #[Route('', name: 'app_employe_index', methods: ['GET'])]

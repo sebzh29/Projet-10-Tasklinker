@@ -16,44 +16,49 @@
                     <h2>{{ projet.nom }}</h2>
                 </a>
 
-                <div class="card-project-icons">
-                    <a
-                        href="{{ path('app_projet_edit', {id: projet.id}) }}"
-                        aria-label="Modifier {{ projet.nom }}"
-                    >
-                        <i class="fa-solid fa-pen"></i>
-                    </a>
-                    <form
-                        method="post"
-                        action="{{ path('app_projet_archive', {id: projet.id}) }}"
-                        class="archive-project-form"
-                        onsubmit="return confirm('Archiver ce projet ?');"
-                    >
-                        <input
-                            type="hidden"
-                            name="_token"
-                            value="{{ csrf_token('archive' ~ projet.id) }}"
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="card-project-icons">
+                        <a
+                            href="{{ path('app_projet_edit', {id: projet.id}) }}"
+                            aria-label="Modifier {{ projet.nom }}"
                         >
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
 
-                        <button
-                            type="submit"
-                            class="archive-project-button"
-                            aria-label="Archiver {{ projet.nom }}"
+                        <form
+                            method="post"
+                            action="{{ path('app_projet_archive', {id: projet.id}) }}"
+                            class="archive-project-form"
+                            onsubmit="return confirm('Archiver ce projet ?');"
                         >
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </form>
-                </div>
+                            <input
+                                type="hidden"
+                                name="_token"
+                                value="{{ csrf_token('archive' ~ projet.id) }}"
+                            >
+
+                            <button
+                                type="submit"
+                                class="archive-project-button"
+                                aria-label="Archiver {{ projet.nom }}"
+                            >
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
             </article>
         {% else %}
             <p>Aucun projet en cours.</p>
         {% endfor %}
 
-        <article class="card-project">
-            <a href="{{ path('app_projet_new') }}">
-                <i class="fa-solid fa-circle-plus add-project-icon"></i>
-                <h2>Ajouter un projet</h2>
-            </a>
-        </article>
+        {% if is_granted('ROLE_ADMIN') %}
+            <article class="card-project">
+                <a href="{{ path('app_projet_new') }}">
+                    <i class="fa-solid fa-circle-plus add-project-icon"></i>
+                    <h2>Ajouter un projet</h2>
+                </a>
+            </article>
+        {% endif %}
     </div>
 {% endblock %}

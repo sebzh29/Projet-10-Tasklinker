@@ -19,12 +19,14 @@
             {% endfor %}
         </div>
 
-        <a
-            class="button"
-            href="{{ path('app_projet_edit', {id: projet.id}) }}"
-        >
-            Modifier
-        </a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a
+                class="button"
+                href="{{ path('app_projet_edit', {id: projet.id}) }}"
+            >
+                Modifier
+            </a>
+        {% endif %}
     </div>
 {% endblock %}
 
@@ -39,8 +41,9 @@
                         <a
                             class="task"
                             href="{{ path('app_tache_edit', {id: tache.id}) }}"
-                        >                            
-                        <h3>{{ tache.nom }}</h3>
+                        >
+                            <h3>{{ tache.nom }}</h3>
+
                             {% if tache.description %}
                                 <p>{{ tache.description }}</p>
                             {% endif %}

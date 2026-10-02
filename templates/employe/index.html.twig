@@ -10,6 +10,7 @@
             <tr>
                 <th>Prénom, Nom</th>
                 <th>Statut</th>
+                <th>Rôle</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -35,6 +36,14 @@
 
                     <td>
                         {{ employe.statut.value }}
+                    </td>
+
+                    <td>
+                        {% if 'ROLE_ADMIN' in employe.roles %}
+                            Chef de projet
+                        {% else %}
+                            Collaborateur
+                        {% endif %}
                     </td>
 
                     <td>
@@ -71,7 +80,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="3">
+                    <td colspan="4">
                         Aucun employé disponible.
                     </td>
                 </tr>

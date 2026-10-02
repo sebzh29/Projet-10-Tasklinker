@@ -9,8 +9,10 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
 
 class EmployeType extends AbstractType
 {
@@ -39,6 +41,15 @@ class EmployeType extends AbstractType
                 'choice_label' => static fn (
                     StatutEmploye $statut
                 ): string => $statut->value,
+            ])
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Rôle',
+                'choices' => [
+                    'Collaborateur' => 'ROLE_USER',
+                    'Chef de projet' => 'ROLE_ADMIN',
+                ],
+                'multiple' => true,
+                'expanded' => false,
             ]);
     }
 

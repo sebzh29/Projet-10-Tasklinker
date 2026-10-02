@@ -36,6 +36,15 @@ final class TacheController extends AbstractController
             );
         }
 
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && !$projet->getEmployes()->contains($this->getUser())
+        ) {
+            throw $this->createAccessDeniedException(
+                'Vous n’avez pas accès à ce projet.'
+            );
+        }
+
         $tache = new Tache();
         $tache->setProjet($projet);
 
@@ -84,6 +93,15 @@ final class TacheController extends AbstractController
 
         $projet = $tache->getProjet();
 
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && !$projet->getEmployes()->contains($this->getUser())
+        ) {
+            throw $this->createAccessDeniedException(
+                'Vous n’avez pas accès à ce projet.'
+            );
+        }
+
         $form = $this->createForm(TacheType::class, $tache, [
             'projet' => $projet,
         ]);
@@ -128,10 +146,25 @@ final class TacheController extends AbstractController
             );
         }
 
-        $projetId = $tache->getProjet()->getId();
+        $projet = $tache->getProjet();
+
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && !$projet->getEmployes()->contains($this->getUser())
+        ) {
+            throw $this->createAccessDeniedException(
+                'Vous n’avez pas accès à ce projet.'
+            );
+        }
+
+        $projetId = $projet->getId();
+
         $token = $request->getPayload()->getString('_token');
 
-        if (!$this->isCsrfTokenValid('delete'.$tache->getId(), $token)) {
+        if (!$this->isCsrfTokenValid(
+            'delete'.$tache->getId(),
+            $token
+        )) {
             throw $this->createAccessDeniedException(
                 'Jeton CSRF invalide.'
             );

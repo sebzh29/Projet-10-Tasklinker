@@ -12,6 +12,7 @@ use App\Entity\Projet;
 use App\Form\ProjetType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProjetController extends AbstractController
 {
@@ -35,6 +36,15 @@ final class ProjetController extends AbstractController
             );
         }
 
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && !$projet->getEmployes()->contains($this->getUser())
+        ) {
+            throw $this->createAccessDeniedException(
+                'Vous n’avez pas accès à ce projet.'
+            );
+        }
+
         $tachesParStatut = [
             StatutTache::A_FAIRE->value => [],
             StatutTache::EN_COURS->value => [],
@@ -53,112 +63,115 @@ final class ProjetController extends AbstractController
     }
 
     #[Route('/projet/nouveau', name: 'app_projet_new')]
-public function new(
-    Request $request,
-    EntityManagerInterface $entityManager
-): Response {
-    $projet = new Projet();
+    #[IsGranted('ROLE_ADMIN')]
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $projet = new Projet();
 
-    $form = $this->createForm(ProjetType::class, $projet);
-    $form->handleRequest($request);
+        $form = $this->createForm(ProjetType::class, $projet);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($projet);
-        foreach ($projet->getTaches() as $tache) {
-            $employe = $tache->getEmploye();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($projet);
+            foreach ($projet->getTaches() as $tache) {
+                $employe = $tache->getEmploye();
 
-            if (
-                $employe !== null
-                && !$projet->getEmployes()->contains($employe)
-            ) {
-                $tache->setEmploye(null);
+                if (
+                    $employe !== null
+                    && !$projet->getEmployes()->contains($employe)
+                ) {
+                    $tache->setEmploye(null);
+                }
             }
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_projet_show', [
+                'id' => $projet->getId(),
+            ]);
         }
-        $entityManager->flush();
 
-        return $this->redirectToRoute('app_projet_show', [
-            'id' => $projet->getId(),
+        return $this->render('projet/new.html.twig', [
+            'form' => $form,
         ]);
     }
 
-    return $this->render('projet/new.html.twig', [
-        'form' => $form,
-    ]);
-}
+    #[Route(
+        '/projet/{id}/modifier',
+        name: 'app_projet_edit',
+        requirements: ['id' => '\d+']
+    )]
+    #[IsGranted('ROLE_ADMIN')]
+    public function edit(
+        int $id,
+        Request $request,
+        ProjetRepository $projetRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $projet = $projetRepository->findOneBy([
+            'id' => $id,
+            'archive' => false,
+        ]);
 
-#[Route(
-    '/projet/{id}/modifier',
-    name: 'app_projet_edit',
-    requirements: ['id' => '\d+']
-)]
-public function edit(
-    int $id,
-    Request $request,
-    ProjetRepository $projetRepository,
-    EntityManagerInterface $entityManager
-): Response {
-    $projet = $projetRepository->findOneBy([
-        'id' => $id,
-        'archive' => false,
-    ]);
+        if ($projet === null) {
+            throw $this->createNotFoundException(
+                'Ce projet n’existe pas ou a été archivé.'
+            );
+        }
 
-    if ($projet === null) {
-        throw $this->createNotFoundException(
-            'Ce projet n’existe pas ou a été archivé.'
-        );
-    }
+        $form = $this->createForm(ProjetType::class, $projet);
+        $form->handleRequest($request);
 
-    $form = $this->createForm(ProjetType::class, $projet);
-    $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->flush();
+            return $this->redirectToRoute('app_projet_show', [
+                'id' => $projet->getId(),
+            ]);
+        }
 
-        return $this->redirectToRoute('app_projet_show', [
-            'id' => $projet->getId(),
+        return $this->render('projet/edit.html.twig', [
+            'projet' => $projet,
+            'form' => $form,
         ]);
     }
 
-    return $this->render('projet/edit.html.twig', [
-        'projet' => $projet,
-        'form' => $form,
-    ]);
-}
+    #[Route(
+        '/projet/{id}/archiver',
+        name: 'app_projet_archive',
+        requirements: ['id' => '\d+'],
+        methods: ['POST']
+    )]
+    #[IsGranted('ROLE_ADMIN')]
+    public function archive(
+        int $id,
+        Request $request,
+        ProjetRepository $projetRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $projet = $projetRepository->findOneBy([
+            'id' => $id,
+            'archive' => false,
+        ]);
 
-#[Route(
-    '/projet/{id}/archiver',
-    name: 'app_projet_archive',
-    requirements: ['id' => '\d+'],
-    methods: ['POST']
-)]
-public function archive(
-    int $id,
-    Request $request,
-    ProjetRepository $projetRepository,
-    EntityManagerInterface $entityManager
-): Response {
-    $projet = $projetRepository->findOneBy([
-        'id' => $id,
-        'archive' => false,
-    ]);
+        if ($projet === null) {
+            throw $this->createNotFoundException(
+                'Ce projet n’existe pas ou a été archivé.'
+            );
+        }
 
-    if ($projet === null) {
-        throw $this->createNotFoundException(
-            'Ce projet n’existe pas ou a été archivé.'
-        );
+        $token = $request->getPayload()->getString('_token');
+
+        if (!$this->isCsrfTokenValid('archive'.$projet->getId(), $token)) {
+            throw $this->createAccessDeniedException(
+                'Jeton CSRF invalide.'
+            );
+        }
+
+        $projet->setArchive(true);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_accueil');
     }
-
-    $token = $request->getPayload()->getString('_token');
-
-    if (!$this->isCsrfTokenValid('archive'.$projet->getId(), $token)) {
-        throw $this->createAccessDeniedException(
-            'Jeton CSRF invalide.'
-        );
-    }
-
-    $projet->setArchive(true);
-    $entityManager->flush();
-
-    return $this->redirectToRoute('app_accueil');
-}
 }

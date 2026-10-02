@@ -12,10 +12,16 @@ final class AccueilController extends AbstractController
     #[Route('/', name: 'app_accueil')]
     public function index(ProjetRepository $projetRepository): Response
     {
-        $projets = $projetRepository->findBy(
-            ['archive' => false],
-            ['id' => 'DESC']
-        );
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $projets = $projetRepository->findBy(
+                ['archive' => false],
+                ['id' => 'DESC']
+            );
+        } else {
+            $projets = $projetRepository->findAccessibleByEmploye(
+                $this->getUser()
+            );
+        }
 
         return $this->render('accueil/index.html.twig', [
             'projets' => $projets,

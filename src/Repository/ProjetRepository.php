@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Projet;
+use App\Entity\Employe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,24 @@ class ProjetRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Projet::class);
+    }
+
+    /**
+     * Retourne les projets non archivés auxquels un employé est affecté.
+     *
+     * @return Projet[]
+     */
+    public function findAccessibleByEmploye(Employe $employe): array
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.employes', 'e')
+            ->andWhere('e = :employe')
+            ->andWhere('p.archive = :archive')
+            ->setParameter('employe', $employe)
+            ->setParameter('archive', false)
+            ->orderBy('p.id', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**
