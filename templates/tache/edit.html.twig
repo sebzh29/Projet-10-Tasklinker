@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ tache.nom }} - TaskLinker
+{% endblock %}
+
+{% block page_title %}
+    {{ tache.nom }}
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.description) }}
+
+        <div class="form-flex">
+            {{ form_row(form.deadline) }}
+            {{ form_row(form.statut) }}
+        </div>
+
+        {{ form_row(form.employe) }}
+
+        <br>
+
+        <button class="button button-submit">
+            Modifier
+        </button>
+    {{ form_end(form) }}
+
+    <form
+        method="post"
+        action="{{ path('app_tache_delete', {id: tache.id}) }}"
+        class="delete-task-form"
+        onsubmit="return confirm('Supprimer cette tâche ?');"
+    >
+        <input
+            type="hidden"
+            name="_token"
+            value="{{ csrf_token('delete' ~ tache.id) }}"
+        >
+
+        <button type="submit" class="delete-task">
+            Supprimer la tâche
+        </button>
+    </form>
+{% endblock %}

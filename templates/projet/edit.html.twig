@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ projet.nom }} - TaskLinker
+{% endblock %}
+
+{% block page_title %}
+    {{ projet.nom }}
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.employes) }}
+
+        <br>
+
+        <button class="button button-submit">
+            Modifier
+        </button>
+    {{ form_end(form) }}
+{% endblock %}

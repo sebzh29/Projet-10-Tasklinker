@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des employés - TaskLinker{% endblock %}
+
+{% block page_title %}Équipe{% endblock %}
+
+{% block body %}
+    <table id="team-container">
+        <thead>
+            <tr>
+                <th>Prénom, Nom</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for employe in employes %}
+                <tr>
+                    <td>
+                        <div class="employee-infos">
+                            <div class="employee-avatar">
+                                {{ employe.prenom|first|upper }}{{ employe.nom|first|upper }}
+                            </div>
+
+                            <div class="employee-coords">
+                                <strong>
+                                    {{ employe.prenom }} {{ employe.nom }}
+                                </strong>
+
+                                <span>{{ employe.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        {{ employe.statut.value }}
+                    </td>
+
+                    <td>
+                        <a
+                            class="button button-edit-team"
+                            href="{{ path('app_employe_edit', {
+                                id: employe.id
+                            }) }}"
+                        >
+                            Éditer
+                        </a>
+
+                        <form
+                            method="post"
+                            action="{{ path('app_employe_delete', {
+                                id: employe.id
+                            }) }}"
+                            class="delete-team-form"
+                        >
+                            <input
+                                type="hidden"
+                                name="_token"
+                                value="{{ csrf_token('delete' ~ employe.id) }}"
+                            >
+
+                            <button
+                                type="submit"
+                                class="delete-team"
+                            >
+                                Supprimer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">
+                        Aucun employé disponible.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
