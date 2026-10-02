@@ -1,11 +1,43 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-logout.html.twig' %}
 
 {% block title %}Bienvenue sur TaskLinker{% endblock %}
 
 {% block body %}
-    <h1>Bienvenue sur TaskLinker</h1>
 
-    <p>Votre compte a bien été créé.</p>
+    <section class="auth-card welcome-card">
 
-    <a href="{{ path('app_accueil') }}">Accéder à TaskLinker</a>
+        <h1>Bienvenue sur TaskLinker</h1>
+
+        <p class="welcome-subtitle">
+            Commencez dès maintenant - gratuitement
+        </p>
+
+        <div class="welcome-login">
+
+            <p>Vous avez déjà un compte ?</p>
+
+            <a
+                href="{{ path('app_login') }}"
+                class="auth-button auth-button-dark"
+            >
+                Se connecter
+            </a>
+
+        </div>
+
+        <div class="auth-separator">
+            <span></span>
+            <p>ou</p>
+            <span></span>
+        </div>
+
+        <a
+            href="{{ path('app_register') }}"
+            class="auth-button auth-button-light"
+        >
+            S'inscrire
+        </a>
+
+    </section>
+
 {% endblock %}

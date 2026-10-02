@@ -1,0 +1,57 @@
+{% extends 'base-logout.html.twig' %}
+
+{% block title %}Connexion - TaskLinker{% endblock %}
+
+{% block body %}
+    <section class="auth-card login-card">
+
+        <h1>Se connecter</h1>
+
+        <form method="post" class="auth-form">
+
+            {% if error %}
+                <div class="auth-error">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <label for="inputEmail">E-mail</label>
+            <input
+                type="email"
+                value="{{ last_username }}"
+                name="email"
+                id="inputEmail"
+                autocomplete="email"
+                required
+                autofocus
+            >
+
+            <label for="inputPassword">Mot de passe</label>
+            <input
+                type="password"
+                name="password"
+                id="inputPassword"
+                autocomplete="current-password"
+                required
+            >
+
+            <input
+                type="hidden"
+                name="_csrf_token"
+                data-controller="csrf-protection"
+                value="{{ csrf_token('authenticate') }}"
+            >
+
+            <button type="submit" class="auth-submit">
+                Continuer
+            </button>
+
+        </form>
+
+        <p class="auth-bottom-link">
+            Pas de compte ?
+            <a href="{{ path('app_register') }}">S'inscrire</a>
+        </p>
+
+    </section>
+{% endblock %}

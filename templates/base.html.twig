@@ -71,7 +71,17 @@
 
             <main>
                 <header>
-                    <div id="current-user"></div>
+                    <div id="current-user">
+                        {% if app.user %}
+                            <a
+                                href="{{ path('app_logout') }}"
+                                class="current-user-avatar"
+                                title="Se déconnecter"
+                            >
+                                {{ app.user.prenom|first|upper }}{{ app.user.nom|first|upper }}
+                            </a>
+                        {% endif %}
+                    </div>
 
                     <div id="title-page">
                         <h1>{% block page_title %}{% endblock %}</h1>

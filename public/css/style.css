@@ -86,6 +86,23 @@ header {
 
 div#current-user {
     height: 55px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.current-user-avatar {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #FFFFFF;
+    color: #1C5B50;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
 }
 
 div#title-page h1 {
@@ -609,4 +626,202 @@ button.delete-task {
     background: transparent;
     font: inherit;
     cursor: pointer;
+}
+
+/* =========================================================
+   PAGES HORS CONNEXION
+   ========================================================= */
+
+.auth-body {
+    margin: 0;
+    min-height: 100vh;
+    background: #FEFBFB;
+}
+
+.auth-background {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #FEFBFB;
+}
+
+/* Grande forme grise diagonale visible sur la maquette */
+.auth-background::before {
+    content: "";
+    position: absolute;
+    top: -65%;
+    left: -15%;
+    width: 135%;
+    height: 125%;
+    background: #F1F1EE;
+    transform: rotate(-15deg);
+    transform-origin: center;
+}
+
+/* Logo en haut à gauche */
+.auth-logo {
+    position: absolute;
+    top: 45px;
+    left: 55px;
+    z-index: 2;
+}
+
+.auth-logo img {
+    display: block;
+    width: 180px;
+    margin: 0;
+}
+
+/* Centre la carte */
+.auth-main {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Carte verte */
+.auth-card {
+    width: 510px;
+    padding: 65px 85px;
+    border-radius: 25px;
+    background: #4D8077;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.auth-card h1 {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.welcome-subtitle {
+    margin: 12px 0 0;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.welcome-login {
+    margin-top: 65px;
+}
+
+.welcome-login p {
+    margin: 0 0 20px;
+    font-size: 12px;
+}
+
+.auth-button {
+    display: flex;
+    width: 100%;
+    height: 58px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-button-dark {
+    background: #1C5B50;
+    color: #FFFFFF;
+}
+
+.auth-button-light {
+    background: #B1D89D;
+    color: #1C5B50;
+}
+
+.auth-separator {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 18px 0;
+}
+
+.auth-separator span {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.auth-separator p {
+    margin: 0;
+    font-size: 12px;
+}
+
+/* Page de connexion */
+
+.login-card {
+    padding: 60px 85px 50px;
+}
+
+.auth-form {
+    width: 100%;
+    margin-top: 45px;
+    text-align: left;
+}
+
+.auth-form label {
+    color: #FFFFFF;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.auth-form input {
+    width: 100%;
+    height: 50px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    background: #FFFFFF;
+}
+
+.auth-submit {
+    width: 100%;
+    height: 58px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #1C5B50;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.auth-bottom-link {
+    margin: 25px 0 0;
+    font-size: 12px;
+}
+
+.auth-bottom-link a {
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+/* Page d'inscription */
+
+.register-card {
+    padding: 45px 85px 35px;
+}
+
+.register-card .auth-form {
+    margin-top: 30px;
+}
+
+.register-card .auth-form input {
+    margin-bottom: 14px;
+}
+
+.register-card .auth-submit {
+    margin-top: 5px;
+}
+
+.register-card .auth-bottom-link {
+    margin-top: 18px;
 }

@@ -23,41 +23,25 @@
                 crossorigin="anonymous"
                 referrerpolicy="no-referrer"
             >
-
-            <link
-                rel="stylesheet"
-                href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-            >
-        {% endblock %}
-
-        {% block javascripts %}
-            <script
-                src="https://code.jquery.com/jquery-3.7.1.min.js"
-                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-                crossorigin="anonymous"
-            ></script>
-
-            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-            <script src="{{ asset('js/select.js') }}"></script>
         {% endblock %}
     </head>
 
-    <body>
-        <div id="main-container">
-            <nav>
-                <a href="{{ path('app_accueil') }}" id="logo">
-                    <img
-                        src="{{ asset('img/logo.png') }}"
-                        alt="Logo TaskLinker"
-                    >
-                </a>
-            </nav>
+    <body class="auth-body">
 
-            <main>
-                <div id="content">
-                    {% block body %}{% endblock %}
-                </div>
+        <div class="auth-background">
+
+            <a href="{{ path('app_welcome') }}" class="auth-logo">
+                <img
+                    src="{{ asset('img/logo.png') }}"
+                    alt="TaskLinker"
+                >
+            </a>
+
+            <main class="auth-main">
+                {% block body %}{% endblock %}
             </main>
+
         </div>
+
     </body>
 </html>
