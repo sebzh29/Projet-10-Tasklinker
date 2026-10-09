@@ -1,8 +1,14 @@
 # TaskLinker
 
-TaskLinker est une application web de gestion de projets, de tâches et d’équipes, développée avec Symfony dans le cadre du projet 8 de la formation OpenClassrooms.
+# TaskLinker
 
-Elle permet de suivre l’avancement des projets et de répartir les tâches entre les employés.
+TaskLinker est une application web de gestion de projets, de tâches et d’équipes, développée avec **Symfony 7.4** dans le cadre des projets 8 et 10 de la formation OpenClassrooms.
+
+Le projet 8 a permis de développer les fonctionnalités de gestion des projets, des tâches et des employés.
+
+Le projet 10 fait évoluer cette application en intégrant un **système d'authentification et de gestion des autorisations**, afin de sécuriser l'accès aux fonctionnalités selon les droits des utilisateurs.
+
+Une **double authentification (2FA) avec Google Authenticator** a également été ajoutée en fonctionnalité complémentaire.
 
 ## Fonctionnalités
 
@@ -64,8 +70,8 @@ Avant l’installation, les outils suivants doivent être disponibles :
 ### 1. Cloner le projet
 
 ```bash
-git clone URL_DU_DEPOT_GITHUB
-cd Projet-8-Tasklinker
+git clone https://github.com/sebzh29/Projet-10-Tasklinker.git
+cd Projet-10-Tasklinker
 ```
 
 Remplacer `URL_DU_DEPOT_GITHUB` par l’adresse réelle du dépôt.
@@ -81,7 +87,7 @@ composer install
 Créer un fichier `.env.local` à la racine du projet :
 
 ```dotenv
-DATABASE_URL="mysql://root:root@127.0.0.1:3306/tasklinker-symf?serverVersion=8.0.32&charset=utf8mb4"
+DATABASE_URL="mysql://login:pwd@127.0.0.1:3306/tasklinker-symf?serverVersion=8.0.32&charset=utf8mb4"
 ```
 
 Adapter l’identifiant, le mot de passe, le nom de la base et la version de MySQL à l’environnement utilisé.
