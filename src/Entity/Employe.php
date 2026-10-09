@@ -14,9 +14,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 #[ORM\Entity(repositoryClass: EmployeRepository::class)]
 #[uniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class Employe implements UserInterface, PasswordAuthenticatedUserInterface
+class Employe implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -45,6 +48,9 @@ class Employe implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleAuthenticatorSecret = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $dateEntree = null;
@@ -229,6 +235,28 @@ class Employe implements UserInterface, PasswordAuthenticatedUserInterface
                 $tach->setEmploye(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isGoogleAuthenticatorEnabled(): bool
+    {
+        return $this->googleAuthenticatorSecret !== null;
+    }
+
+    public function getGoogleAuthenticatorUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function getGoogleAuthenticatorSecret(): ?string
+    {
+        return $this->googleAuthenticatorSecret;
+    }
+
+    public function setGoogleAuthenticatorSecret(?string $secret): static
+    {
+        $this->googleAuthenticatorSecret = $secret;
 
         return $this;
     }

@@ -1,0 +1,59 @@
+{% extends 'base-logout.html.twig' %}
+
+{% block title %}Vérification de sécurité - TaskLinker{% endblock %}
+
+{% block body %}
+    <section class="auth-card login-card">
+
+        <h1>Vérification de sécurité</h1>
+
+        <p>
+            🔐 Pour protéger votre compte, saisissez le code
+            à 6 chiffres affiché dans Google Authenticator.
+        </p>
+
+        {% if authenticationError %}
+            <div class="auth-error">
+                Code incorrect ou expiré. Veuillez réessayer.
+            </div>
+        {% endif %}
+
+        <form method="post"
+              action="{{ path('2fa_login_check') }}"
+              class="auth-form">
+
+            <label for="authCode">Code de vérification</label>
+
+            <input
+                type="text"
+                name="{{ authCodeParameterName }}"
+                id="authCode"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                autocomplete="one-time-code"
+                placeholder="000000"
+                required
+                autofocus
+            >
+
+            <input
+                type="hidden"
+                name="{{ csrfParameterName }}"
+                value="{{ csrf_token(csrfTokenId) }}"
+            >
+
+            <button type="submit" class="auth-submit">
+                Vérifier mon identité
+            </button>
+
+        </form>
+
+        <p class="auth-bottom-link">
+            <a href="{{ path('app_logout') }}">
+                Annuler et se déconnecter
+            </a>
+        </p>
+
+    </section>
+{% endblock %}

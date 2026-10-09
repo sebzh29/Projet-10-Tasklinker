@@ -1,0 +1,84 @@
+{% extends 'base-logout.html.twig' %}
+
+{% block title %}Activer la double authentification - TaskLinker{% endblock %}
+
+{% block body %}
+    <section class="auth-card login-card">
+
+        <h1>Activer la double authentification</h1>
+
+        <p>
+            Pour sécuriser votre compte, ajoutez TaskLinker
+            dans votre application Google Authenticator.
+        </p>
+
+        <p>
+            Dans Google Authenticator, choisissez
+            <strong>Ajouter un compte</strong>, puis
+            <strong>Saisir une clé de configuration</strong>.
+        </p>
+
+        <p>
+            <strong>Nom du compte :</strong>
+            TaskLinker
+        </p>
+
+        <p>
+            <strong>Clé de configuration :</strong>
+        </p>
+
+        <p>
+            <code>{{ secret }}</code>
+        </p>
+
+        <p>
+            Une fois le compte ajouté, saisissez le code
+            à 6 chiffres affiché dans votre application.
+        </p>
+
+        {% for message in app.flashes('danger') %}
+            <div class="auth-error">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <form
+            method="post"
+            action="{{ path('app_2fa_setup') }}"
+            class="auth-form"
+        >
+
+            <label for="code">Code de vérification</label>
+
+            <input
+                type="text"
+                name="code"
+                id="code"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                autocomplete="one-time-code"
+                required
+                autofocus
+            >
+
+            <input
+                type="hidden"
+                name="_token"
+                value="{{ csrf_token('2fa_setup') }}"
+            >
+
+            <button type="submit" class="auth-submit">
+                Activer la double authentification
+            </button>
+
+        </form>
+
+        <p class="auth-bottom-link">
+            <a href="{{ path('app_accueil') }}">
+                Retour à l'accueil
+            </a>
+        </p>
+
+    </section>
+{% endblock %}
