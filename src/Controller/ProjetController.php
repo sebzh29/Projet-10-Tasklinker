@@ -13,6 +13,7 @@ use App\Form\ProjetType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Security\Voter\ProjetVoter;
 
 final class ProjetController extends AbstractController
 {
@@ -36,14 +37,16 @@ final class ProjetController extends AbstractController
             );
         }
 
-        if (
-            !$this->isGranted('ROLE_ADMIN')
-            && !$projet->getEmployes()->contains($this->getUser())
-        ) {
-            throw $this->createAccessDeniedException(
-                'Vous n’avez pas accès à ce projet.'
-            );
-        }
+        // if (
+        //     !$this->isGranted('ROLE_ADMIN')
+        //     && !$projet->getEmployes()->contains($this->getUser())
+        // ) {
+        //     throw $this->createAccessDeniedException(
+        //         'Vous n’avez pas accès à ce projet.'
+        //     );
+        // }
+
+        $this->denyAccessUnlessGranted(ProjetVoter::VIEW, $projet);
 
         $tachesParStatut = [
             StatutTache::A_FAIRE->value => [],

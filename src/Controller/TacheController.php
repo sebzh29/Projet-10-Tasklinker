@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Security\Voter\ProjetVoter;
 
 final class TacheController extends AbstractController
 {
@@ -36,14 +37,7 @@ final class TacheController extends AbstractController
             );
         }
 
-        if (
-            !$this->isGranted('ROLE_ADMIN')
-            && !$projet->getEmployes()->contains($this->getUser())
-        ) {
-            throw $this->createAccessDeniedException(
-                'Vous n’avez pas accès à ce projet.'
-            );
-        }
+        $this->denyAccessUnlessGranted(ProjetVoter::VIEW, $projet);
 
         $tache = new Tache();
         $tache->setProjet($projet);
@@ -93,14 +87,7 @@ final class TacheController extends AbstractController
 
         $projet = $tache->getProjet();
 
-        if (
-            !$this->isGranted('ROLE_ADMIN')
-            && !$projet->getEmployes()->contains($this->getUser())
-        ) {
-            throw $this->createAccessDeniedException(
-                'Vous n’avez pas accès à ce projet.'
-            );
-        }
+        $this->denyAccessUnlessGranted(ProjetVoter::VIEW, $projet);
 
         $form = $this->createForm(TacheType::class, $tache, [
             'projet' => $projet,
@@ -148,14 +135,7 @@ final class TacheController extends AbstractController
 
         $projet = $tache->getProjet();
 
-        if (
-            !$this->isGranted('ROLE_ADMIN')
-            && !$projet->getEmployes()->contains($this->getUser())
-        ) {
-            throw $this->createAccessDeniedException(
-                'Vous n’avez pas accès à ce projet.'
-            );
-        }
+        $this->denyAccessUnlessGranted(ProjetVoter::VIEW, $projet);
 
         $projetId = $projet->getId();
 
